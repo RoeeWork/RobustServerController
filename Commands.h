@@ -3,15 +3,17 @@
 #include "utils.h"
 
 class Commands {
-	Commands();
-	protected:
+	public:
 		std::vector<host_info> chosenHosts;
+	protected:
+		Commands();
 		void UpdateHosts();
 
 };
 
 class AddServers: public Commands {
 	public:
+		AddServers();
 		std::vector<host_info> Start();
 
 	protected:

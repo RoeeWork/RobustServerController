@@ -1,11 +1,11 @@
 /* arp_utils.cpp */
 
-#include "utils.h"
+#include "arp_utils.h"
 
-// gets a line of an arp-scan output, parses the ip and MAC address,returns both in a map<mac, ip>.
-std::map<std::string, std::string> parsedArpOutput() {
+// uses arpScanOutput(), parses all ipv4 and MAC address's , returns all in a vector of pairs <mac, ip>.
+std::vector<std::pair<std::string, std::string>> parsedArpOutput() {
 
-	std::map<std::string, std::string> hosts;
+	std::vector<std::pair<std::string, std::string>> hosts;
 	std::vector<std::string> arpout = arpScanOutput();
 
 	for (int i = 0; i < arpout.size(); i++) {
@@ -13,14 +13,15 @@ std::map<std::string, std::string> parsedArpOutput() {
 		std::string ipv4 = line.substr(0, line.find('\t'));
 		std::string mac_addr = line.substr( (line.find('\t') + 1) , (line.substr(line.find('\t') + 1, line.size() - 1).find('\t')));
 		
-		hosts[mac_addr] = ipv4;
+		std::pair host_pair = { mac_addr, ipv4 };
 
+		hosts.push_back(host_pair);
 	}
 
 	return hosts;
 }
 
-void PrintOut(std::map<std::string, std::string> parsedout){
+void PrintOut(std::vector<std::pair<std::string, std::string>> parsedout){
 	int i = 1;
 	for (const auto &p : parsedout) {
 		std::cout << "==========Host No." << i << "============\n";
@@ -45,7 +46,7 @@ std::vector<std::string> arpScanOutput(){
 	
 	while(fgets(buffer, sizeof(buffer), f)) {
 		// skip arp-scan header (first two lines)
-		if (count == 2) {
+		if (count >= 2) {
 			lines.emplace_back(buffer);
 		}
 		else { count++; }
