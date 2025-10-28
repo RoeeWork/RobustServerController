@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/rsc.dir/link.d CMakeFiles/rsc.dir/main.cpp.o CMakeFiles/rsc.dir/Commands.cpp.o CMakeFiles/rsc.dir/arp_utils.cpp.o CMakeFiles/rsc.dir/AddServers.cpp.o CMakeFiles/rsc.dir/json_utils.cpp.o -o rsc
