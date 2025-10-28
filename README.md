@@ -14,7 +14,9 @@ $ cd RobustServerController
 $ cmake -S . -B build
 $ cmake --build build
 ```
+
 ### adding to path
+
 bash:
 ```
 # add to PATH temporarily
@@ -34,7 +36,9 @@ $ export PATH="/path/to/project_root/RobustServerController/build:$PATH"
 $ echo 'export PATH="/path/to/project_root/RobustServerController/build:$PATH"' >> ~/.zshrc
 $ source ~/.zshrc
 ```
+
 ### Usage
+
 ```
 # lists chosen servers, and if they are offline/online.
 $ rsc
