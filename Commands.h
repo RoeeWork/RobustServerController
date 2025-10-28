@@ -17,17 +17,12 @@ class AddServers: public Commands {
 		std::vector<host_info> Start();
 
 	protected:
-		void SaveAddrs();
+		void SaveAddrs(std::vector<host_info> addedHosts);
 };
 
 class ControlWorker: public Commands {
-	struct host_output {
-		std::string name;
-		std::string ipv4;
-		std::string MAC;
-		std::string status; // offline-online
-	};
 	public:
+		ControlWorker();
 		void Start();
 	protected:
 		std::vector<host_output> hostOutputs;

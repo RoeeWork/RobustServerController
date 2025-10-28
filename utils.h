@@ -13,3 +13,10 @@ struct host_info {
 	std::string IPv4;
 	std::string MAC;
 };
+
+struct host_output {
+	std::string name;
+	std::string IPv4;
+	std::string MAC;
+	std::string status; // offline-online
+};

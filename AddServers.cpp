@@ -13,6 +13,7 @@ std::vector<host_info> AddServers::Start() {
 	std::cout << "[AddServers::Start()] scanning hosts on LAN..." << std::endl;
 	std::vector<std::pair<std::string, std::string>> hostsStrings = parsedArpOutput();
 	std::cout << "[AddServers::Start()] Done!\n";
+
 	for (const auto &p : hostsStrings) {
 		std::string mac_addr = p.first;
 		std::string ipv4 = p.second;
@@ -54,32 +55,48 @@ std::vector<host_info> AddServers::Start() {
 		
 		host_info currhost = chosenAddrsTemp[hostNum - 1];
 		std::string hostName;
-		std::cout << "[AddServers::Start()] Name your server: ";
 
+		std::cout << "[AddServers::Start()] Name your server: ";
 		std::cin >> hostName;
+
 		currhost.name = hostName;
 		chosenAddrs.push_back(currhost);
 		std::cout << "[AddServers::Start()] done! \n " << std::endl;
 	}
 	
-	std::cout << "test";
-	for (auto &i: chosenAddrs) { this->chosenHosts.push_back(i); }
-	std::cout << "test";
-	SaveAddrs();
-	std::cout << "test";
+	SaveAddrs(chosenAddrs);
+	UpdateHosts();
+
 	return chosenAddrs;
 }
 
-void AddServers::SaveAddrs() {
-	if (this->chosenHosts.size() != 0) {
-		json j_hosts = this->chosenHosts;
+void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
+	if (addedHosts.size() != 0) {
+		if (!std::filesystem::exists("serverinfo.json")) {
+			std::ofstream file("serverinfo.json");
+			file << "[]";
+			file.close();
+		}
+
 		json j_hosts_data = json::array();
 
 		std::ifstream infile("serverinfo.json");
 		if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
-			infile >> j_hosts_data;
+			try {
+				infile >> j_hosts_data;
+				if ( !j_hosts_data.is_array()) {
+	                std::cerr << "[AddServers::SaveAddrs()] Warning: JSON is not an array. Resetting.\n";
+					j_hosts_data = json::array();
+				}
+			}
+			catch (json::parse_error &e) {
+	                std::cerr << "[AddServers::SaveAddrs()] ERROR: parse error. Resetting.\n";
+					j_hosts_data = json::array();
+			}
 		}
 		infile.close();
+
+		json j_hosts = addedHosts;
 		std::cout << "hosts:\n" << j_hosts.dump(4) << std::endl;
 		std::cout << "data:\n" << j_hosts_data.dump(4) << std::endl;
 		for (auto &h : j_hosts) {

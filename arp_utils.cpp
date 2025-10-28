@@ -2,6 +2,31 @@
 
 #include "arp_utils.h"
 
+
+
+// checks if destMAC is found in arpOut, if so, parses IPv4 address from the string into destIP,
+// then returns true. returns false if MAC couldnt be found.
+bool checkStatus(std::string destMAC, std::vector<std::string> arpOut, std::string& destIP) {
+	for (const std::string &h: arpOut) {
+		if (h.find(destMAC) != std::string::npos) {
+			std::pair<std::string, std::string> parsedHost = parseArpOutputLine(h);
+			destIP = parsedHost.second;
+			return true;
+		}
+	}
+	destIP = "Not Found";
+	return false;
+}
+
+// parses a single line of arp-scan output and returns a pair <mac, ip>
+std::pair<std::string, std::string> parseArpOutputLine(std::string line) {
+
+	std::string mac_addr = line.substr( (line.find('\t') + 1) , (line.substr(line.find('\t') + 1, line.size() - 1).find('\t')));
+	std::string ipv4 = line.substr(0, line.find('\t'));
+	
+	return { mac_addr, ipv4 };
+}
+
 // uses arpScanOutput(), parses all ipv4 and MAC address's , returns all in a vector of pairs <mac, ip>.
 std::vector<std::pair<std::string, std::string>> parsedArpOutput() {
 
@@ -10,26 +35,14 @@ std::vector<std::pair<std::string, std::string>> parsedArpOutput() {
 
 	for (int i = 0; i < arpout.size(); i++) {
 		std::string line = arpout[i];
-		std::string ipv4 = line.substr(0, line.find('\t'));
-		std::string mac_addr = line.substr( (line.find('\t') + 1) , (line.substr(line.find('\t') + 1, line.size() - 1).find('\t')));
 		
-		std::pair host_pair = { mac_addr, ipv4 };
-
+		std::pair host_pair = parseArpOutputLine(line);
 		hosts.push_back(host_pair);
 	}
 
 	return hosts;
 }
 
-void PrintOut(std::vector<std::pair<std::string, std::string>> parsedout){
-	int i = 1;
-	for (const auto &p : parsedout) {
-		std::cout << "==========Host No." << i << "============\n";
-		std::cout << "MAC:\t" << p.first << '\n'
-				<< "IPv4:\t" << p.second << '\n';
-		i++;
-	}
-}
 // uses popen() to get arp-scan output, and saves each 
 // line to a vector EXCEPT for the first two lines (the header) 
 // and last three lines (the trailer).
@@ -57,4 +70,14 @@ std::vector<std::string> arpScanOutput(){
 		lines.resize(lines.size() - 3);
 	}
 	return lines;
+}
+
+void PrintOut(std::vector<std::pair<std::string, std::string>> parsedout){
+	int i = 1;
+	for (const auto &p : parsedout) {
+		std::cout << "==========Host No." << i << "============\n";
+		std::cout << "MAC:\t" << p.first << '\n'
+				<< "IPv4:\t" << p.second << '\n';
+		i++;
+	}
 }

@@ -2,14 +2,19 @@
 #include "Commands.h"
 #include "json_utils.h"
 
-int main() {
-	AddServers add;
-	add.Start();
-	std::cout << "chose hosts.\n";
-	for (auto &p: add.chosenHosts) {
-		std::cout << p.name << ":";
-		std::cout << p.IPv4 << "\n";
+int main(int argc, char *argv[]) {
+	if (argc == 2 && strcmp(argv[1],"--add-servers")) {
+		AddServers add;
+		add.Start();
 	}
+	if (argc == 1) {
+		std::cout << "starting argc=1" << std::endl;
+		ControlWorker cmd;
+		std::cout << "created cmd object" << std::endl;
+		cmd.Start();
+		std::cout << "finished cmd object" << std::endl;
+	}
+	return 0;
 }
 
 

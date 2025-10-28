@@ -9,8 +9,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(rsc 
 				main.cpp 
 				Commands.cpp 
-				arp_utils.cpp 
 				AddServers.cpp
+				ControlWorker.cpp
+				arp_utils.cpp 
 				json_utils.cpp)
 
 find_package(nlohmann_json 3.2.0 REQUIRED)
