@@ -1,4 +1,5 @@
 #pragma once
+
 #include <vector>
 #include <map>
 #include <cstdio>
@@ -6,7 +7,17 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <iomanip>
+
 #include <nlohmann/json.hpp>
+
+#define RESET  "\033[0m"
+#define RED    "\033[31m"
+#define GREEN  "\033[32m"
+#define YELLOW "\033[33m"
+#define BLUE   "\033[34m"
+#define BOLD   "\033[1m"
+#define UNDER  "\033[4m"
 
 struct host_info {
 	std::string name;

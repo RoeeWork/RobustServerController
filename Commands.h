@@ -8,6 +8,7 @@ extern bool verbose;
 class Commands {
 	public:
 		std::vector<host_info> chosenHosts;
+		bool isFirstRun;
 	protected:
 		Commands();
 		void UpdateHosts();

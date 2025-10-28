@@ -1,7 +1,7 @@
 /* arp_utils.cpp */
 
 #include "arp_utils.h"
-
+#include "utils.h"
 
 
 // checks if destMAC is found in arpOut, if so, parses IPv4 address from the string into destIP,
@@ -74,10 +74,22 @@ std::vector<std::string> arpScanOutput(){
 
 void PrintOut(std::vector<std::pair<std::string, std::string>> parsedout){
 	int i = 1;
-	for (const auto &p : parsedout) {
-		std::cout << "==========Host No." << i << "============\n";
-		std::cout << "MAC:\t" << p.first << '\n'
-				<< "IPv4:\t" << p.second << '\n';
+	std::cout << "\n";
+	std::cout << BOLD 
+			  << std::left
+			  << std::setw(4) << "#"
+			  << std::setw(15) << "IPV4"
+			  << std::setw(20) << "MAC"
+			  << RESET
+			  << '\n';
+
+	for (const auto &h : parsedout) {
+		std::cout << std::left
+				  << std::setw(4) << i << RESET
+				  << GREEN
+				  << std::setw(15) << h.second
+				  << std::setw(20) << h.first << RESET
+				  << '\n';
 		i++;
 	}
 }

@@ -30,8 +30,13 @@ std::vector<host_info> AddServers::Start() {
 		std::cout << "[AddServers::Start()] choose host number (-1 if done): ";
 		std::string num;
 		std::getline(std::cin, num);
-		hostNum = stoi(num);
-
+		try {
+			hostNum = stoi(num);
+		}
+		catch (std::invalid_argument) {
+			std::cout << "[AddServers::Start()] please input a valid number.\n" << std::endl;
+			continue;
+		}
 		if (!std::cin) {
 			std::cout << "[AddServers::Start()] please input a valid number.\n" << std::endl;
 			hostNum = 0;
@@ -49,7 +54,7 @@ std::vector<host_info> AddServers::Start() {
 				break;
 			}
 		}
-		if (hostNum > hostsStrings.size()) {
+		if (hostNum > hostsStrings.size() || (hostNum <= 0 && hostNum != -1)) {
 			std::cout << "[AddServers::Start()] please input a number that is in range.\n" << std::endl;
 
 			continue;
@@ -101,16 +106,14 @@ void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
 		infile.close();
 
 		json j_hosts = addedHosts;
-		std::cout << "hosts:\n" << j_hosts.dump(4) << std::endl;
-		std::cout << "data:\n" << j_hosts_data.dump(4) << std::endl;
 		for (auto &h : j_hosts) {
 			j_hosts_data.push_back(h);
 		}
-		std::cout << "data after push-back:\n" << j_hosts_data.dump(4) << std::endl;
 		std::ofstream outfile("serverinfo.json");
 		outfile << j_hosts_data.dump(4);
 		outfile.close();
 	}
+	this->isFirstRun = false;
 	verbose_print("[AddServers::SaveAddrs()] done!\n", verbose);
 }
 

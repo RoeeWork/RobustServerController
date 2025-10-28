@@ -22,12 +22,28 @@ void ControlWorker::Start() {
 
 void ControlWorker::PrintOutput() {
 	verbose_print("[ControlWorker::PrintOutput()] printing output...\n", verbose);
+	std::cout << "\n";
+	std::cout << BOLD 
+			  << std::left
+			  << std::setw(10) << ""
+			  << std::setw(10) << "STATUS"
+			  << std::setw(20) << "NAME"
+			  << std::setw(15) << "IPV4"
+			  << std::setw(20) << "MAC"
+			  << RESET
+			  << '\n';
+
 	for (auto &h : this->hostOutputs) {
-		std::cout << "==============" << h.name << "==============\n";
-		std::cout << "status:\t" << h.status << '\n'
-					<< "MAC:\t" << h.MAC << '\n'
-					<< "IPv4:\t" << h.IPv4<< '\n';
+        std::string color = (h.status == "online") ? GREEN : RED;
+		std::cout << BLUE
+				  << std::left 
+				  << std::setw(10) << ""
+				  << color << std::setw(10) << h.status << RESET
+				  << std::setw(20) << h.name
+				  << std::setw(15) << h.IPv4
+				  << std::setw(20) << h.MAC << RESET
+				  << '\n';
 	}
-	std::cout << "=======================================\n";
+	std::cout << "\n";
 	verbose_print("[ControlWorker::PrintOutput()] done!\n", verbose);
 }
