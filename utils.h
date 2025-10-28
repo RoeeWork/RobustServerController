@@ -19,6 +19,8 @@
 #define BOLD   "\033[1m"
 #define UNDER  "\033[4m"
 
+inline std::filesystem::path root = std::filesystem::canonical("/proc/self/exe").parent_path().parent_path();
+
 struct host_info {
 	std::string name;
 	std::string IPv4;

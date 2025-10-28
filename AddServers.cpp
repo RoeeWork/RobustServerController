@@ -81,15 +81,15 @@ std::vector<host_info> AddServers::Start() {
 void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
 	verbose_print("[AddServers::SaveAddrs()] saving selected hosts.\n", verbose);
 	if (addedHosts.size() != 0) {
-		if (!std::filesystem::exists("serverinfo.json")) {
-			std::ofstream file("serverinfo.json");
+		if (!std::filesystem::exists(root / "serverinfo.json")) {
+			std::ofstream file("root / serverinfo.json");
 			file << "[]";
 			file.close();
 		}
 
 		json j_hosts_data = json::array();
 
-		std::ifstream infile("serverinfo.json");
+		std::ifstream infile("root / serverinfo.json");
 		if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
 			try {
 				infile >> j_hosts_data;
@@ -109,7 +109,7 @@ void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
 		for (auto &h : j_hosts) {
 			j_hosts_data.push_back(h);
 		}
-		std::ofstream outfile("serverinfo.json");
+		std::ofstream outfile(root / "serverinfo.json");
 		outfile << j_hosts_data.dump(4);
 		outfile.close();
 	}

@@ -7,15 +7,15 @@ Commands::Commands() {
 	UpdateHosts();
 	bool isFirstRun;
 
-	if (!std::filesystem::exists("firstrun.json")) {
-		std::ofstream file("firstrun.json");
+	if (!std::filesystem::exists(root / "firstrun.json")) {
+		std::ofstream file(root / "firstrun.json");
 		file << "{}";
 		file.close();
 	}
 
 	json j_isFirstRun; 
 
-	std::ifstream infile("firstrun.json");
+	std::ifstream infile(root / "firstrun.json");
 	if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
 		try {
 			infile >> j_isFirstRun;
@@ -32,7 +32,7 @@ Commands::Commands() {
 	}
 
 	else {
-		std::ofstream outfile("firstrun.json");
+		std::ofstream outfile(root / "firstrun.json");
 		j_isFirstRun["isFirstRun"] = true;
 		isFirstRun = true;
 		outfile << j_isFirstRun;
@@ -42,7 +42,7 @@ Commands::Commands() {
 	if(isFirstRun) {
 		AddServers add;
 		add.Start();
-		std::ofstream outfile("firstrun.json");
+		std::ofstream outfile(root / "firstrun.json");
 		j_isFirstRun["isFirstRun"] = false;
 		isFirstRun = false;
 		outfile << j_isFirstRun;
@@ -55,15 +55,15 @@ Commands::Commands() {
 void Commands::UpdateHosts() {
 	json j_hosts_data;
 
-	if (!std::filesystem::exists("serverinfo.json")) {
-		std::ofstream file("serverinfo.json");
+	if (!std::filesystem::exists(root / "serverinfo.json")) {
+		std::ofstream file(root / "serverinfo.json");
 		file << "[]";
 		file.close();
 	}
 
 	j_hosts_data = json::array();
 
-	std::ifstream infile("serverinfo.json");
+	std::ifstream infile(root / "serverinfo.json");
 	if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
 		try {
 			infile >> j_hosts_data;
