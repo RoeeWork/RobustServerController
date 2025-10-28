@@ -3,10 +3,10 @@
 ControlWorker::ControlWorker() {}
 
 void ControlWorker::Start() {
-	std::cout << "[ControlWorker::Start()] started!\n";
-	std::cout << "[ControlWorker::Start()] starting arp-scan\n";
+	verbose_print("[ControlWorker::Start()] starting ControlWorker::Start()...\n", verbose);
+	verbose_print("[ControlWorker::Start()] starting arp-scan\n", verbose);
 	std::vector<std::string> arpOut = arpScanOutput();
-	std::cout << "[ControlWorker::Start()] done!\n";
+	verbose_print("[ControlWorker::Start()] done!\n", verbose);
 
 	for (auto &h : this->chosenHosts) {
 		host_output currHost;
@@ -16,10 +16,12 @@ void ControlWorker::Start() {
 		status ? currHost.status = "online" : currHost.status = "offline";
 		this->hostOutputs.push_back(currHost);
 	}
-	PrintOutput();
+	PrintOutput(); 
+	verbose_print("[ControlWorker::Start()] finished!\n", verbose);
 }
 
 void ControlWorker::PrintOutput() {
+	verbose_print("[ControlWorker::PrintOutput()] printing output...\n", verbose);
 	for (auto &h : this->hostOutputs) {
 		std::cout << "==============" << h.name << "==============\n";
 		std::cout << "status:\t" << h.status << '\n'
@@ -27,4 +29,5 @@ void ControlWorker::PrintOutput() {
 					<< "IPv4:\t" << h.IPv4<< '\n';
 	}
 	std::cout << "=======================================\n";
+	verbose_print("[ControlWorker::PrintOutput()] done!\n", verbose);
 }

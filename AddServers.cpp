@@ -6,7 +6,7 @@
 AddServers::AddServers() {}
 
 std::vector<host_info> AddServers::Start() {
-
+	verbose_print("[AddServers::Start()] starting Addserver::Start().\n", verbose);
 	std::vector<host_info> chosenAddrs;
 	std::vector<host_info> chosenAddrsTemp;
 
@@ -23,16 +23,18 @@ std::vector<host_info> AddServers::Start() {
 		chosenAddrsTemp.push_back(currhost);
 	}
 
+	int hostNum;
 	while (true) {
 		PrintOut(hostsStrings);
 
-		int hostNum;
-
 		std::cout << "[AddServers::Start()] choose host number (-1 if done): ";
-		std::cin >> hostNum;
+		std::string num;
+		std::getline(std::cin, num);
+		hostNum = stoi(num);
 
 		if (!std::cin) {
 			std::cout << "[AddServers::Start()] please input a valid number.\n" << std::endl;
+			hostNum = 0;
 			continue;
 		}
 		if (hostNum == -1) {
@@ -57,20 +59,22 @@ std::vector<host_info> AddServers::Start() {
 		std::string hostName;
 
 		std::cout << "[AddServers::Start()] Name your server: ";
-		std::cin >> hostName;
+		std::getline(std::cin, hostName);
 
 		currhost.name = hostName;
 		chosenAddrs.push_back(currhost);
-		std::cout << "[AddServers::Start()] done! \n " << std::endl;
 	}
 	
+	verbose_print("[AddServers::Start()] done... starting save\n ", verbose);
 	SaveAddrs(chosenAddrs);
 	UpdateHosts();
-
+ 
+	std::cout << "[AddServers::Start()] done!\n";
 	return chosenAddrs;
 }
 
 void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
+	verbose_print("[AddServers::SaveAddrs()] saving selected hosts.\n", verbose);
 	if (addedHosts.size() != 0) {
 		if (!std::filesystem::exists("serverinfo.json")) {
 			std::ofstream file("serverinfo.json");
@@ -107,6 +111,7 @@ void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
 		outfile << j_hosts_data.dump(4);
 		outfile.close();
 	}
+	verbose_print("[AddServers::SaveAddrs()] done!\n", verbose);
 }
 
 

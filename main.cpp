@@ -2,18 +2,30 @@
 #include "Commands.h"
 #include "json_utils.h"
 
+
+void verbose_print(const std::string& msg, bool verbose) {
+    if (verbose) std::cout << msg << std::endl;
+}
+
+bool verbose = false;
+
 int main(int argc, char *argv[]) {
-	if (argc == 2 && strcmp(argv[1],"--add-servers")) {
-		AddServers add;
-		add.Start();
-	}
-	if (argc == 1) {
-		std::cout << "starting argc=1" << std::endl;
-		ControlWorker cmd;
-		std::cout << "created cmd object" << std::endl;
-		cmd.Start();
-		std::cout << "finished cmd object" << std::endl;
-	}
+	for (int i = 1; i < argc; ++i) {
+        std::string arg = argv[i];
+        if (arg == "--verbose" || arg == "-v") {
+            verbose = true;
+        } else if (arg == "--add-servers") {
+			AddServers add;
+			add.Start();
+			return 0;
+
+		} else {
+			std::cout << "arguement invalid.";
+			return 0;
+		}
+    }
+	ControlWorker cmd;
+	cmd.Start();
 	return 0;
 }
 

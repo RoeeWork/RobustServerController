@@ -20,3 +20,5 @@ struct host_output {
 	std::string MAC;
 	std::string status; // offline-online
 };
+
+void verbose_print(const std::string& msg, bool verbose);

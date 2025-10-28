@@ -2,6 +2,9 @@
 #include "arp_utils.h"
 #include "utils.h"
 
+extern bool verbose;
+
+
 class Commands {
 	public:
 		std::vector<host_info> chosenHosts;
