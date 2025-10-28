@@ -5,6 +5,7 @@
 
 Commands::Commands() {
 	UpdateHosts();
+	bool isFirstRun;
 
 	if (!std::filesystem::exists("firstrun.json")) {
 		std::ofstream file("firstrun.json");
@@ -27,27 +28,27 @@ Commands::Commands() {
 	infile.close();
 	
 	if (j_isFirstRun.contains("isFirstRun") && j_isFirstRun["isFirstRun"].is_boolean()) {
-		this->isFirstRun = j_isFirstRun["isFirstRun"].get<bool>();
+		bool isFirstRun = j_isFirstRun["isFirstRun"].get<bool>();
 	}
 
 	else {
 		std::ofstream outfile("firstrun.json");
 		j_isFirstRun["isFirstRun"] = true;
-		this->isFirstRun = true;
+		isFirstRun = true;
 		outfile << j_isFirstRun;
 		outfile.close();
 	}
 
-	if(this->isFirstRun) {
+	if(isFirstRun) {
 		AddServers add;
 		add.Start();
 		std::ofstream outfile("firstrun.json");
 		j_isFirstRun["isFirstRun"] = false;
-		this->isFirstRun = false;
+		isFirstRun = false;
 		outfile << j_isFirstRun;
 		outfile.close();
 	}
-
+	this->isFirstRun = isFirstRun;
 	UpdateHosts();
 }
 
