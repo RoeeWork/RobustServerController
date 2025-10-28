@@ -1,5 +1,5 @@
 /* Commands.h */
-
+#include "arp_utils.h"
 #include "utils.h"
 
 class Commands {
@@ -17,8 +17,7 @@ class AddServers: public Commands {
 		std::vector<host_info> Start();
 
 	protected:
-		std::vector<host_info> ScanAddresses();
-		std::string SaveAddrs();
+		void SaveAddrs();
 };
 
 class ControlWorker: public Commands {

@@ -1,6 +1,7 @@
 /* AddServers.cpp */
 
 #include "Commands.h"
+#include "json_utils.h"
 
 AddServers::AddServers() {}
 
@@ -61,7 +62,34 @@ std::vector<host_info> AddServers::Start() {
 		std::cout << "[AddServers::Start()] done! \n " << std::endl;
 	}
 	
+	std::cout << "test";
 	for (auto &i: chosenAddrs) { this->chosenHosts.push_back(i); }
+	std::cout << "test";
+	SaveAddrs();
+	std::cout << "test";
 	return chosenAddrs;
 }
+
+void AddServers::SaveAddrs() {
+	if (this->chosenHosts.size() != 0) {
+		json j_hosts = this->chosenHosts;
+		json j_hosts_data = json::array();
+
+		std::ifstream infile("serverinfo.json");
+		if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
+			infile >> j_hosts_data;
+		}
+		infile.close();
+		std::cout << "hosts:\n" << j_hosts.dump(4) << std::endl;
+		std::cout << "data:\n" << j_hosts_data.dump(4) << std::endl;
+		for (auto &h : j_hosts) {
+			j_hosts_data.push_back(h);
+		}
+		std::cout << "data after push-back:\n" << j_hosts_data.dump(4) << std::endl;
+		std::ofstream outfile("serverinfo.json");
+		outfile << j_hosts_data.dump(4);
+		outfile.close();
+	}
+}
+
 

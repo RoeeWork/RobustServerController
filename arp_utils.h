@@ -1,18 +1,5 @@
 /* arp_utils.h */
-
-#include <iostream>
-#include <vector>
-#include <map>
-#include <cstdio>
-#include <array>
-
-
-struct host_info {
-	std::string name;
-	std::string IPv4;
-	std::string MAC;
-};
-
+#include "utils.h"
 
 // uses arpScanOutput(), parses all ipv4 and MAC address's , returns all in a vector of pairs <mac, ip>.
 std::vector<std::pair<std::string, std::string>> parsedArpOutput();
