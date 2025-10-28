@@ -1,0 +1,3 @@
+/home/roee/docs/servercontroller/build/CMakeFiles/rsc.dir
+/home/roee/docs/servercontroller/build/CMakeFiles/edit_cache.dir
+/home/roee/docs/servercontroller/build/CMakeFiles/rebuild_cache.dir
