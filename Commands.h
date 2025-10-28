@@ -1,22 +1,23 @@
 /* Commands.h */
-
+#include "arp_utils.h"
 #include "utils.h"
 
 class Commands {
-	Commands();
-	protected:
+	public:
 		std::vector<host_info> chosenHosts;
+	protected:
+		Commands();
 		void UpdateHosts();
 
 };
 
 class AddServers: public Commands {
 	public:
+		AddServers();
 		std::vector<host_info> Start();
 
 	protected:
-		std::vector<host_info> ScanAddresses();
-		std::string SaveAddrs();
+		void SaveAddrs();
 };
 
 class ControlWorker: public Commands {
