@@ -44,9 +44,11 @@ $ source ~/.zshrc
 $ rsc
 
 # add servers
-$ rsc --add-servers
+$ rsc -a
+# or
+$ rsc --addservers
 
-# verbose
+# start in verbose mode
 $ rsc -v
 # or
 $ rsc --verbose
