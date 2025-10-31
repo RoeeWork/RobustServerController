@@ -8,6 +8,7 @@
 #include <fstream>
 #include <filesystem>
 #include <iomanip>
+#include <bits/stdc++.h>
 
 #include <nlohmann/json.hpp>
 

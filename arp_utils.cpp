@@ -9,12 +9,17 @@
 bool checkStatus(std::string destMAC, std::vector<std::string> arpOut, std::string& destIP) {
 	for (const std::string &h: arpOut) {
 		if (h.find(destMAC) != std::string::npos) {
-			std::pair<std::string, std::string> parsedHost = parseArpOutputLine(h);
-			destIP = parsedHost.second;
-			return true;
+			try {
+				std::pair<std::string, std::string> parsedHost = parseArpOutputLine(h);
+				destIP = parsedHost.second;
+				return true;
+			}
+			catch (std::exception &e) {
+				throw std::runtime_error(RED + std::string("[arp_utils::checkStatus()] ERROR: ") + e.what());
+			}
 		}
 	}
-	destIP = "Not Found";
+	destIP = "N/A";
 	return false;
 }
 
@@ -50,25 +55,31 @@ std::vector<std::string> arpScanOutput(){
 
 	FILE* f = popen("arp-scan --localnet", "r");
 	if (!f) {
-		std::cerr << "pipe failure!\n" << std::endl;
+		throw std::runtime_error(RED + std::string("[arp_utils::arpScanOutput()] couldnt create arp-scan pipe!"));
 	}
 	
 	std::vector<std::string> lines;
 	char buffer[512];
 	int count = 0;
-	
-	while(fgets(buffer, sizeof(buffer), f)) {
-		// skip arp-scan header (first two lines)
-		if (count >= 2) {
-			lines.emplace_back(buffer);
+	try {
+		while(fgets(buffer, sizeof(buffer), f)) {
+			// skip arp-scan header (first two lines)
+			if (count >= 2) {
+				lines.emplace_back(buffer);
+			}
+			else { count++; }
 		}
-		else { count++; }
+		
+		// remove arp-scan trailer (last three lines)
+		if(lines.size() >= 3) {
+			lines.resize(lines.size() - 3);
+		}
 	}
-	
-	// remove arp-scan trailer (last three lines)
-	if(lines.size() >= 3) {
-		lines.resize(lines.size() - 3);
+	catch (std::exception &e) {
+		pclose(f);
+		throw std::runtime_error(RED + std::string("[arp_utils::arpScanOutput()] arp-scan error: ") + e.what());
 	}
+	pclose(f);
 	return lines;
 }
 

@@ -6,13 +6,13 @@
 AddServers::AddServers() {}
 
 std::vector<host_info> AddServers::Start() {
-	verbose_print("[AddServers::Start()] starting Addserver::Start().\n", verbose);
+	verbose_print("[AddServers::Start()] starting Addserver::Start().", verbose);
 	std::vector<host_info> chosenAddrs;
 	std::vector<host_info> chosenAddrsTemp;
 
 	std::cout << "[AddServers::Start()] scanning hosts on LAN..." << std::endl;
 	std::vector<std::pair<std::string, std::string>> hostsStrings = parsedArpOutput();
-	std::cout << "[AddServers::Start()] Done!\n";
+	
 
 	for (const auto &p : hostsStrings) {
 		std::string mac_addr = p.first;
@@ -23,7 +23,10 @@ std::vector<host_info> AddServers::Start() {
 		chosenAddrsTemp.push_back(currhost);
 	}
 
+	std::cout << "[AddServers::Start()] Done!\n";
 	int hostNum;
+
+	verbose_print("[AddServers::Start()] starting host select loop...", verbose);
 	while (true) {
 		PrintOut(hostsStrings);
 
@@ -37,6 +40,11 @@ std::vector<host_info> AddServers::Start() {
 			std::cout << "[AddServers::Start()] please input a valid number.\n" << std::endl;
 			continue;
 		}
+		catch (std::out_of_range) {
+			std::cout << "[AddServers::Start()] number out of range.\n" << std::endl;
+			continue;
+		}
+
 		if (!std::cin) {
 			std::cout << "[AddServers::Start()] please input a valid number.\n" << std::endl;
 			hostNum = 0;
@@ -56,7 +64,6 @@ std::vector<host_info> AddServers::Start() {
 		}
 		if (hostNum > hostsStrings.size() || (hostNum <= 0 && hostNum != -1)) {
 			std::cout << "[AddServers::Start()] please input a number that is in range.\n" << std::endl;
-
 			continue;
 		}
 		
@@ -70,7 +77,7 @@ std::vector<host_info> AddServers::Start() {
 		chosenAddrs.push_back(currhost);
 	}
 	
-	verbose_print("[AddServers::Start()] done... starting save\n ", verbose);
+	verbose_print("[AddServers::Start()] done... starting save ", verbose);
 	SaveAddrs(chosenAddrs);
 	UpdateHosts();
  
@@ -79,27 +86,36 @@ std::vector<host_info> AddServers::Start() {
 }
 
 void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
-	verbose_print("[AddServers::SaveAddrs()] saving selected hosts.\n", verbose);
+	verbose_print("[AddServers::SaveAddrs()] starting AddServers::SaveAddrs().", verbose);
+	verbose_print("[AddServers::SaveAddrs()] saving selected hosts.", verbose);
 	if (addedHosts.size() != 0) {
-		if (!std::filesystem::exists(root / "serverinfo.json")) {
-			std::ofstream file("root / serverinfo.json");
-			file << "[]";
-			file.close();
+		try {
+			verbose_print("[AddServers::SaveAddrs()] checking if serverinfo.json exists...", verbose);
+			if (!std::filesystem::exists(root / "serverinfo.json")) {
+				verbose_print("[AddServers::SaveAddrs()] attempting to create serverinfo.json...", verbose);
+				std::ofstream file(root / "serverinfo.json");
+				file << "[]";
+				file.close();
+			}
 		}
-
+		catch (std::exception &e) {
+			throw std::runtime_error(RED + std::string("[AddServers::SaveAddrs()] FILE ERROR: cant create serverinfo.json: ") + e.what());
+		}
 		json j_hosts_data = json::array();
 
-		std::ifstream infile("root / serverinfo.json");
+		verbose_print("[AddServers::SaveAddrs()] attempting to read serverinfo.json...", verbose);
+		std::ifstream infile(root / "serverinfo.json");
 		if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
 			try {
+				verbose_print("[AddServers::SaveAddrs()] attempting to parse serverinfo.json...", verbose);
 				infile >> j_hosts_data;
 				if ( !j_hosts_data.is_array()) {
-	                std::cerr << "[AddServers::SaveAddrs()] Warning: JSON is not an array. Resetting.\n";
+	                std::cerr << "[AddServers::SaveAddrs()] Warning: JSON is not an array. Resetting.";
 					j_hosts_data = json::array();
 				}
 			}
 			catch (json::parse_error &e) {
-	                std::cerr << "[AddServers::SaveAddrs()] ERROR: parse error. Resetting.\n";
+	                std::cerr << "[AddServers::SaveAddrs()] ERROR: parse error. Resetting.";
 					j_hosts_data = json::array();
 			}
 		}
@@ -109,12 +125,18 @@ void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {
 		for (auto &h : j_hosts) {
 			j_hosts_data.push_back(h);
 		}
-		std::ofstream outfile(root / "serverinfo.json");
-		outfile << j_hosts_data.dump(4);
-		outfile.close();
+		try {
+			verbose_print("[AddServers::SaveAddrs()] attempting to write to serverinfo.json...", verbose);
+			std::ofstream outfile(root / "serverinfo.json");
+			outfile << j_hosts_data.dump(4);
+			outfile.close();
+		}
+		catch (std::exception &e) {
+		    throw std::runtime_error(std::string("[AddServers::SaveAddrs()] FILE WRITE ERROR: ") + e.what());
+		}
 	}
 	this->isFirstRun = false;
-	verbose_print("[AddServers::SaveAddrs()] done!\n", verbose);
+	verbose_print("[AddServers::SaveAddrs()] done!", verbose);
 }
 
 
