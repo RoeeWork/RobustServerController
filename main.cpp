@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 				add.Start();
 				return 0;
 
-			} else if (arg == "--removeserver" || arg == "-r") {
+			} else if (arg == "--remove" || arg == "-rm") {
 				AddServers update;
 				std::string name = argv[i + 1];
 				update.RemoveHost(name);

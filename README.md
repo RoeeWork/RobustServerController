@@ -49,9 +49,9 @@ $ rsc -a
 $ rsc --addservers
 
 # remove server
-$ rsc -r <ServerName>
+$ rsc -rm <ServerName>
 # or
-$ rsc --removeserver <ServerName>
+$ rsc --remove <ServerName>
 
 # start in verbose mode
 $ rsc -v
