@@ -8,6 +8,7 @@ extern bool verbose;
 class Commands {
 	public:
 		std::vector<host_info> chosenHosts;
+		void RemoveHost(std::string hostName);
 		bool isFirstRun;
 	protected:
 		Commands();
@@ -19,8 +20,6 @@ class AddServers: public Commands {
 	public:
 		AddServers();
 		std::vector<host_info> Start();
-
-	protected:
 		void SaveAddrs(std::vector<host_info> addedHosts);
 };
 

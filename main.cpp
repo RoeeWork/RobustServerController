@@ -10,13 +10,14 @@
 // 	4.	[x] add normal cli arugment managment
 // 	5.	[x] improve verbosity
 // 	6.	[ ] improve security
-// 	7.	[ ] add delete server command
+// 	7.	[x] add delete server command
 // 	8.	[ ] add reset user info command
 // 	9.	[ ] add command to add server manually by ipv4
 // 	10.	[ ] add command to add server manually by MAC
 // 	11.	[ ] add command to change a servers name
 // 	12.	[x] add error managment
-// 	13. [ ] 
+// 	13. [ ] windows support?
+// 	14. [ ] fix verbose bug
 //
 
 
@@ -35,6 +36,12 @@ int main(int argc, char *argv[]) {
 			} else if (arg == "--addservers" || arg == "-a") {
 				AddServers add;
 				add.Start();
+				return 0;
+
+			} else if (arg == "--removeserver" || arg == "-r") {
+				AddServers update;
+				std::string name = argv[i + 1];
+				update.RemoveHost(name);
 				return 0;
 
 			} else {
