@@ -40,6 +40,11 @@ $ source ~/.zshrc
 ### Usage
 
 ```
+# help command
+$ rsc -h
+# or
+$ rsc --help
+
 # lists chosen servers, and if they are offline/online.
 $ rsc
 

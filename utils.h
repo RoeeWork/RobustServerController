@@ -36,3 +36,4 @@ struct host_output {
 };
 
 void verbose_print(const std::string& msg, bool verbose);
+void help_command(); 

@@ -17,12 +17,36 @@
 // 	11.	[ ] add command to change a servers name
 // 	12.	[x] add error managment
 // 	13. [ ] windows support?
-// 	14. [ ] fix verbose bug
+// 	14. [x] fix verbose bug
+// 	15. [ ] automation script
 //
 
 
 void verbose_print(const std::string& msg, bool verbose) {
     if (verbose) std::cout << BLUE << "VERBOSE: " << RESET << msg << std::endl;
+}
+
+void help_command() {
+	std::cout << 
+		 R"(USAGE: rsc [OPTIONS] [COMMAND]
+
+Robust Server Controller (rsc)
+provides simple functionallity to save server information and automatically find IPv4 addresses.
+
+COMMANDS:
+	$ rsc					# lists all saved server information.
+	$ rsc --addservers		# adds servers from LAN.
+	$ rsc --remove <HOSTNAME>	# removes <HOSTNAME> from the saved servers list.
+
+FLAGS:
+	-h,  --help			help for rsc.
+	-v,  --verbose 		provides verbose output for rsc.
+	-a,  --addservers 	add servers from online servers on LAN.
+	-rm, --remove 		remove a saved server profile.
+
+DESCRIPTION:
+	rsc is a sever controller written in c++. it provides simple functionallity
+	for managing LAN servers whose addresses may change due to a NAT.)" << std::endl;
 }
 
 bool verbose = false;
@@ -33,11 +57,17 @@ int main(int argc, char *argv[]) {
 			std::string arg = argv[i];
 			if (arg == "--verbose" || arg == "-v") {
 				verbose = true;
-			} else if (arg == "--addservers" || arg == "-a") {
+			} else if (arg == "--help" || arg == "-h") {
+				help_command();
+				return 0;
+			}
+		}
+		for (int i = 1; i < argc; ++i) {
+			std::string arg = argv[i];
+			if (arg == "--addservers" || arg == "-a") {
 				AddServers add;
 				add.Start();
 				return 0;
-
 			} else if (arg == "--remove" || arg == "-rm") {
 				AddServers update;
 				std::string name = argv[i + 1];
