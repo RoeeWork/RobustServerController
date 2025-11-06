@@ -16,3 +16,6 @@ add_executable(rsc
 
 find_package(nlohmann_json 3.2.0 REQUIRED)
 target_link_libraries(rsc PRIVATE nlohmann_json::nlohmann_json)
+find_package(Boost REQUIRED COMPONENTS program_options)
+target_link_libraries(rsc PRIVATE Boost::program_options)
+

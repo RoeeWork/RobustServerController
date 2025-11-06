@@ -6,7 +6,7 @@
 // TODO:
 // 	1.	[ ] add TUI
 // 	2.	[ ] implement arp-scan
-// 	3.	[ ] add help command
+// 	3.	[x] add help command
 // 	4.	[x] add normal cli arugment managment
 // 	5.	[x] improve verbosity
 // 	6.	[ ] improve security
@@ -50,50 +50,66 @@ DESCRIPTION:
 }
 
 bool verbose = false;
+namespace po = boost::program_options; 
 
 int main(int argc, char *argv[]) {
 	try {
-		for (int i = 1; i < argc; ++i) {
-			std::string arg = argv[i];
-			if (arg == "--verbose" || arg == "-v") {
-				verbose = true;
-			} else if (arg == "--help" || arg == "-h") {
-				help_command();
-				return 0;
-			}
+		po::options_description desc("options");
+		desc.add_options()
+			("help,h", "produce help messege")
+			("verbose,v", "run in verbose mode")
+			("addservers,a", "add new servers")
+			("remove,rm", po::value<std::string>(), "removes a server");
+		
+		po::variables_map vm;
+		po::store(po::parse_command_line(argc, argv, desc), vm);
+		po::notify(vm);
+		if (vm.count("help")) {
+			help_command();
+			return 0;
 		}
-		for (int i = 1; i < argc; ++i) {
-			std::string arg = argv[i];
-			if (arg == "--addservers" || arg == "-a") {
-				AddServers add;
-				add.Start();
-				return 0;
-			} else if (arg == "--remove" || arg == "-rm") {
-				AddServers update;
-				std::string name = argv[i + 1];
-				update.RemoveHost(name);
-				return 0;
-
-			} else {
-				throw std::invalid_argument("Invalid argument");
-			}
+		if (vm.count("verbose")) {
+			verbose = true;
+		}
+		if (!vm.count("addservers") && !vm.count("remove")) {
+			ControlWorker cmd;
+			cmd.Start();
+		} else if(vm.count("addservers") && !vm.count("remove")) {
+			AddServers add;
+			add.Start();
+			return 0;
+		} else if(!vm.count("addservers") && vm.count("remove")) {
+			AddServers update;
+			std::string name = vm["remove"].as<std::string>();
+			update.RemoveHost(name);
+			return 0;
+		} else {
+			throw std::invalid_argument("Invalid argument");
 		}
 	}
 	catch (std::invalid_argument &e) {
 		std::cout << RED <<"[rsc::main()] INVALID ARGUEMENT ERROR: " << RESET << e.what() << std::endl;
-		// TODO: print help here
+		help_command();
 		return 0;
 	}
+	catch(boost::wrapexcept<boost::program_options::invalid_command_line_syntax> const& e) {
+		std::cout << RED <<"[rsc::main()] INVALID ARGUEMENT ERROR: " << RESET << e.what() << std::endl;
+		help_command();
+		return 0;
+	} 
 	catch (std::runtime_error &e) {
 		std::cout << RED << "[rsc::main()] RUNTIME ERROR: " << RESET << e.what() << std::endl;
+		return 0;
+	}
+	
+	catch(po::error const& e) {
+		std::cout << RED << "[rsc::main()] CLI ARGUEMENT PARSER ERROR: " << RESET << e.what() << std::endl;
 		return 0;
 	}
 	catch(std::exception &e) {
 		std::cout << RED << "[rsc::main()] UNKOWN ERROR: " << RESET << e.what() << std::endl;
 		return 0;
 	}
-	ControlWorker cmd;
-	cmd.Start();
 	return 0;
 }
 

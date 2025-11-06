@@ -10,6 +10,7 @@
 #include <iomanip>
 #include <bits/stdc++.h>
 
+#include <boost/program_options.hpp>
 #include <nlohmann/json.hpp>
 
 #define RESET  "\033[0m"
