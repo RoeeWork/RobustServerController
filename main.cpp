@@ -19,15 +19,16 @@ provides simple functionallity to save server information and automatically find
 COMMANDS:
 	$ rsc                                               # lists all saved server information.
 	$ rsc --addservers                                  # adds servers from LAN.
+	$ rsc --addipv4                                     # adds a server by its IPv4 address.
 	$ rsc --remove <HOSTNAME>                           # removes <HOSTNAME> from the saved servers list.
-	$ rsc --changename <HOSTNAME> --newname <NEWNAME>   # removes <HOSTNAME> from the saved servers list.
+	$ rsc --changename <HOSTNAME> --newname <NEWNAME>   # changes <HOSTNAME> to <NEWNAME>.
 
 FLAGS:
 	-h,  --help         help for rsc.
 	-v,  --verbose      provides verbose output for rsc.
 	-a,  --addservers   add servers from online servers on LAN.
 	-rm, --remove       remove a saved server profile.
-	-cn, --changename   changes a profiles name
+	-cn, --changename   changes a profiles name.
 
 DESCRIPTION:
 	rsc is a sever controller written in c++. it provides simple functionallity
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
 			("addservers,a", "add new servers")
 			("changename,cn", po::value<std::string>(), "change a hosts name")
 			("newname", po::value<std::string>(), "new host name")
-			("addipv4", po::value<std::string>(), "new host name")
+			("addipv4", "add a host by IPv4")
 			("remove,rm", po::value<std::string>(), "removes a server");
 		
 		po::variables_map vm;
