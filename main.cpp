@@ -2,26 +2,6 @@
 #include "Commands.h"
 #include "json_utils.h"
 
-
-// TODO:
-// 	1.	[ ] add TUI
-// 	2.	[ ] implement arp-scan
-// 	3.	[x] add help command
-// 	4.	[x] add normal cli arugment managment
-// 	5.	[x] improve verbosity
-// 	6.	[ ] improve security
-// 	7.	[x] add delete server command
-// 	8.	[ ] add reset user info command
-// 	9.	[ ] add command to add server manually by ipv4
-// 	10.	[ ] add command to add server manually by MAC
-// 	11.	[x] add command to change a servers name
-// 	12.	[x] add error managment
-// 	13. [ ] windows support?
-// 	14. [x] fix verbose bug
-// 	15. [ ] automation script
-//
-
-
 void verbose_print(const std::string& msg, bool verbose) {
     if (verbose) std::cout << BLUE << "VERBOSE: " << RESET << msg << std::endl;
 }
