@@ -7,11 +7,12 @@ extern bool verbose;
 
 class Commands {
 	public:
+		Commands();
 		std::vector<host_info> chosenHosts;
 		void RemoveHost(std::string hostName);
+		void changeHostName(std::string currName, std::string newName);
 		bool isFirstRun;
 	protected:
-		Commands();
 		void UpdateHosts();
 
 };

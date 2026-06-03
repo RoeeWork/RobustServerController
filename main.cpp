@@ -14,7 +14,7 @@
 // 	8.	[ ] add reset user info command
 // 	9.	[ ] add command to add server manually by ipv4
 // 	10.	[ ] add command to add server manually by MAC
-// 	11.	[ ] add command to change a servers name
+// 	11.	[x] add command to change a servers name
 // 	12.	[x] add error managment
 // 	13. [ ] windows support?
 // 	14. [x] fix verbose bug
@@ -26,6 +26,9 @@ void verbose_print(const std::string& msg, bool verbose) {
     if (verbose) std::cout << BLUE << "VERBOSE: " << RESET << msg << std::endl;
 }
 
+// WARNING: DO NOT USE TABS!
+// 			using tabs will not align the descriptions correctly.
+// 			use spaces instead.
 void help_command() {
 	std::cout << 
 		 R"(USAGE: rsc [OPTIONS] [COMMAND]
@@ -34,15 +37,17 @@ Robust Server Controller (rsc)
 provides simple functionallity to save server information and automatically find IPv4 addresses.
 
 COMMANDS:
-	$ rsc					# lists all saved server information.
-	$ rsc --addservers		# adds servers from LAN.
-	$ rsc --remove <HOSTNAME>	# removes <HOSTNAME> from the saved servers list.
+	$ rsc                                               # lists all saved server information.
+	$ rsc --addservers                                  # adds servers from LAN.
+	$ rsc --remove <HOSTNAME>                           # removes <HOSTNAME> from the saved servers list.
+	$ rsc --changename <HOSTNAME> --newname <NEWNAME>   # removes <HOSTNAME> from the saved servers list.
 
 FLAGS:
-	-h,  --help			help for rsc.
-	-v,  --verbose 		provides verbose output for rsc.
-	-a,  --addservers 	add servers from online servers on LAN.
-	-rm, --remove 		remove a saved server profile.
+	-h,  --help         help for rsc.
+	-v,  --verbose      provides verbose output for rsc.
+	-a,  --addservers   add servers from online servers on LAN.
+	-rm, --remove       remove a saved server profile.
+	-cn, --changename   changes a profiles name
 
 DESCRIPTION:
 	rsc is a sever controller written in c++. it provides simple functionallity
@@ -59,6 +64,8 @@ int main(int argc, char *argv[]) {
 			("help,h", "produce help messege")
 			("verbose,v", "run in verbose mode")
 			("addservers,a", "add new servers")
+			("changename,cn", po::value<std::string>(), "change a hosts name")
+			("newname", po::value<std::string>(), "new host name")
 			("remove,rm", po::value<std::string>(), "removes a server");
 		
 		po::variables_map vm;
@@ -71,6 +78,18 @@ int main(int argc, char *argv[]) {
 		if (vm.count("verbose")) {
 			verbose = true;
 		}
+		if (vm.count("changename") && vm.count("newname")) {
+			Commands update;
+			std::string name = vm["changename"].as<std::string>();
+			std::string newName = vm["NEW-NAME"].as<std::string>();
+			update.changeHostName(name, newName);
+		} else if (vm.count("changename") && !vm.count("newname")) {
+			throw std::invalid_argument("Invalid argument: forgot to input the new name, --newname <name>");
+
+		} else if (!vm.count("changename") && vm.count("newname")) {
+			throw std::invalid_argument("Invalid argument: what new name? usage: --changename <old_name> --newname <name>");
+		}
+		
 		if (!vm.count("addservers") && !vm.count("remove")) {
 			ControlWorker cmd;
 			cmd.Start();
@@ -79,7 +98,7 @@ int main(int argc, char *argv[]) {
 			add.Start();
 			return 0;
 		} else if(!vm.count("addservers") && vm.count("remove")) {
-			AddServers update;
+			Commands update;
 			std::string name = vm["remove"].as<std::string>();
 			update.RemoveHost(name);
 			return 0;

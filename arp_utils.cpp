@@ -53,7 +53,7 @@ std::vector<std::pair<std::string, std::string>> parsedArpOutput() {
 // and last three lines (the trailer).
 std::vector<std::string> arpScanOutput(){
 
-	FILE* f = popen("arp-scan --localnet", "r");
+	FILE* f = popen("arp-scan --interface wlp0s20f0u3 --localnet", "r");
 	if (!f) {
 		throw std::runtime_error(RED + std::string("[arp_utils::arpScanOutput()] couldnt create arp-scan pipe!"));
 	}
