@@ -2,6 +2,7 @@
 
 #include "Commands.h"
 #include "json_utils.h"
+#include "arp_utils.h"
 
 AddServers::AddServers() {}
 
@@ -32,7 +33,7 @@ std::vector<host_info> AddServers::Start() {
 
 		std::cout << "[AddServers::Start()] choose host number (-1 if done): ";
 		std::string num;
-		std::getline(std::cin, num);
+		std::getline(std::cin, num); // TODO: crashes when gets no input, add a try here
 		try {
 			hostNum = stoi(num);
 		}
@@ -83,6 +84,33 @@ std::vector<host_info> AddServers::Start() {
  
 	std::cout << "[AddServers::Start()] done!\n";
 	return chosenAddrs;
+}
+
+
+void AddServers::SaveByIPv4() {
+		host_info currhost;
+		std::string host_ip;
+		try {
+			std::cout << "[AddServers::SaveByIPv4()] input IPv4 Address: ";
+			std::getline(std::cin, host_ip); // TODO: crashes when gets no input, add a try here
+			std::cout << "[AddServers::SaveByIPv4()] input name: ";
+			std::getline(std::cin, currhost.name); // TODO: crashes when gets no input, add a try here
+		}
+		catch (std::invalid_argument) {
+			std::cout << "[AddServers::SaveByIPv4()] please input a valid IPv4 address.\n" << std::endl;
+		}
+		currhost.IPv4 = host_ip;
+		currhost.MAC = "N/A";
+
+		std::vector<std::string> arpOut = arpScanOutput();
+		checkIPv4Status(currhost.IPv4, arpOut, currhost.MAC);
+
+		if (currhost.MAC == "N/A") {
+			std::cout << "[AddServers::SaveByIPv4()] couldnt find server.\n" << std::endl;
+		}
+		std::vector<host_info> addedHosts;
+		addedHosts.push_back(currhost);
+		SaveAddrs(addedHosts);
 }
 
 void AddServers::SaveAddrs(std::vector<host_info> addedHosts) {

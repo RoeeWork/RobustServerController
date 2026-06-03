@@ -21,6 +21,7 @@ class AddServers: public Commands {
 	public:
 		AddServers();
 		std::vector<host_info> Start();
+		void SaveByIPv4();
 		void SaveAddrs(std::vector<host_info> addedHosts);
 };
 

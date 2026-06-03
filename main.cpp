@@ -39,6 +39,9 @@ namespace po = boost::program_options;
 
 int main(int argc, char *argv[]) {
 	try {
+		AddServers add;
+		ControlWorker cmd;
+		Commands update;
 		po::options_description desc("options");
 		desc.add_options()
 			("help,h", "produce help messege")
@@ -46,6 +49,7 @@ int main(int argc, char *argv[]) {
 			("addservers,a", "add new servers")
 			("changename,cn", po::value<std::string>(), "change a hosts name")
 			("newname", po::value<std::string>(), "new host name")
+			("addipv4", po::value<std::string>(), "new host name")
 			("remove,rm", po::value<std::string>(), "removes a server");
 		
 		po::variables_map vm;
@@ -59,7 +63,6 @@ int main(int argc, char *argv[]) {
 			verbose = true;
 		}
 		if (vm.count("changename") && vm.count("newname")) {
-			Commands update;
 			std::string name = vm["changename"].as<std::string>();
 			std::string newName = vm["NEW-NAME"].as<std::string>();
 			update.changeHostName(name, newName);
@@ -69,16 +72,16 @@ int main(int argc, char *argv[]) {
 		} else if (!vm.count("changename") && vm.count("newname")) {
 			throw std::invalid_argument("Invalid argument: what new name? usage: --changename <old_name> --newname <name>");
 		}
-		
+		if (vm.count("addipv4")) {
+			add.SaveByIPv4();
+			return 0;
+		}
 		if (!vm.count("addservers") && !vm.count("remove")) {
-			ControlWorker cmd;
 			cmd.Start();
 		} else if(vm.count("addservers") && !vm.count("remove")) {
-			AddServers add;
 			add.Start();
 			return 0;
 		} else if(!vm.count("addservers") && vm.count("remove")) {
-			Commands update;
 			std::string name = vm["remove"].as<std::string>();
 			update.RemoveHost(name);
 			return 0;

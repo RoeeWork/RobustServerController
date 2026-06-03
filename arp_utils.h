@@ -7,6 +7,7 @@ std::vector<std::pair<std::string, std::string>> parsedArpOutput();
 // parses a single line of arp-scan output
 std::pair<std::string, std::string> parseArpOutputLine(std::string line);
 
+bool checkIPv4Status(std::string destIP, std::vector<std::string> arpOut, std::string& destMAC);
 // checks if destMAC is found in arpOut, if so, parses IPv4 address from the string into destIP,
 // then returns true. returns false if MAC couldnt be found.
 bool checkStatus(std::string destMAC, std::vector<std::string> arpOut, std::string &destIP);

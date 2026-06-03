@@ -23,6 +23,23 @@ bool checkStatus(std::string destMAC, std::vector<std::string> arpOut, std::stri
 	return false;
 }
 
+bool checkIPv4Status(std::string destIP, std::vector<std::string> arpOut, std::string& destMAC) {
+	for (const std::string &h: arpOut) {
+		if (h.find(destIP) != std::string::npos) {
+			try {
+				std::pair<std::string, std::string> parsedHost = parseArpOutputLine(h);
+				destMAC = parsedHost.first;
+				return true;
+			}
+			catch (std::exception &e) {
+				throw std::runtime_error(RED + std::string("[arp_utils::checkStatus()] ERROR: ") + e.what());
+			}
+		}
+	}
+	destMAC = "N/A"; // does this change the destMAC in hostinfo when called?
+	return false;
+}
+
 // parses a single line of arp-scan output and returns a pair <mac, ip>
 std::pair<std::string, std::string> parseArpOutputLine(std::string line) {
 
