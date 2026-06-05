@@ -1,15 +1,47 @@
 #!/bin/bash
 set -euo pipefail
 
+pm_for_os() {
+  [[ -f /etc/os-release ]] || { echo "Cannot detect OS: /etc/os-release not found" >&2; return 1; }
+  # shellcheck source=/dev/null
+  source /etc/os-release
+
+  local id="${ID,,}"
+  local id_like=" ${ID_LIKE,,} "
+
+  case "$id" in
+    debian|ubuntu|linuxmint|pop|elementary|zorin|kali|parrot|raspbian|neon|deepin)
+      echo apt; return ;;
+    fedora) echo dnf; return ;;
+    rhel|centos|rocky|almalinux|ol|scientific|azurelinux|mariner)
+      echo dnf; return ;;
+    arch|manjaro|endeavouros|garuda|cachyos)
+      echo pacman; return ;;
+  esac
+
+  case "$id_like" in
+    *" debian "*) echo apt; return ;;
+    *" rhel "*)   echo dnf; return ;;
+    *" fedora "*) echo dnf; return ;;
+    *" arch "*)   echo pacman; return ;;
+  esac
+
+  echo "Unsupported OS: ${PRETTY_NAME:-$ID}" >&2
+  return 1
+}
+
 detect_pm() {
-  if command -v apt &>/dev/null; then echo apt; return; fi
-  if command -v dnf &>/dev/null; then echo dnf; return; fi
-  if command -v pacman &>/dev/null; then echo pacman; return; fi
+  local pm
+  pm="$(pm_for_os)" || return 1
+  if ! command -v "$pm" &>/dev/null; then
+    echo "Expected package manager '$pm' for this OS is not installed." >&2
+    return 1
+  fi
+  echo "$pm"
 }
 
 is_rhel_like() {
   [[ -f /etc/os-release ]] || return 1
-  # shellcheck source=/dev/null
   source /etc/os-release
   case "${ID:-}" in
     rhel|centos|rocky|almalinux|ol|scientific) return 0 ;;
@@ -44,12 +76,12 @@ install_deps() {
   esac
 }
 
-PM="$(detect_pm || true)"
+PM="$(detect_pm)" || exit 1
 case "$PM" in
     apt)    DEPS=(build-essential cmake libboost-program-options-dev nlohmann-json3-dev arp-scan) ;;
     dnf)    DEPS=(gcc-c++ make cmake boost-devel json-devel arp-scan) ;;
     pacman) DEPS=(base-devel cmake boost nlohmann-json arp-scan) ;;
-    *)      echo "No supported package manager found" >&2; exit 1 ;;
+    *)      echo "Unsupported package manager: $PM" >&2; exit 1 ;;
 esac
 
 [[ "$PM" == "dnf" ]] && ensure_epel
