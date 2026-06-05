@@ -6,8 +6,13 @@ pm_for_os() {
   # shellcheck source=/dev/null
   source /etc/os-release
 
-  local id="${ID,,}"
-  local id_like=" ${ID_LIKE,,} "
+  # just in case, set id as optional
+  local id="${ID:-}"
+  id="${id,,}"
+  
+  # not every OS uses ID_LIKE, must be set as optional.
+  local id_like="${ID_LIKE:-}"
+  id_like=" ${id_like,,} "
 
   case "$id" in
     debian|ubuntu|linuxmint|pop|elementary|zorin|kali|parrot|raspbian|neon|deepin)
