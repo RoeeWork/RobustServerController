@@ -4,6 +4,15 @@ a sever controller written in c++, provides simple functionallity to save server
 
 # Quickstart
 
+### using the setup.sh script:
+```
+# clone using git
+$ git clone https://github.com/RoeeWork/RobustServerController
+$ cd RobustServerController
+
+$ ./setup.sh
+```
+
 ### building project manually
 ```
 # clone using git
