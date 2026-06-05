@@ -1,0 +1,104 @@
+#!/bin/bash
+set -euo pipefail
+
+pm_for_os() {
+  [[ -f /etc/os-release ]] || { echo "Cannot detect OS: /etc/os-release not found" >&2; return 1; }
+  # shellcheck source=/dev/null
+  source /etc/os-release
+
+  # just in case, set id as optional
+  local id="${ID:-}"
+  id="${id,,}"
+  
+  # not every OS uses ID_LIKE, must be set as optional.
+  local id_like="${ID_LIKE:-}"
+  id_like=" ${id_like,,} "
+
+  case "$id" in
+    debian|ubuntu|linuxmint|pop|elementary|zorin|kali|parrot|raspbian|neon|deepin)
+      echo apt; return ;;
+    fedora) echo dnf; return ;;
+    rhel|centos|rocky|almalinux|ol|scientific|azurelinux|mariner)
+      echo dnf; return ;;
+    arch|manjaro|endeavouros|garuda|cachyos)
+      echo pacman; return ;;
+  esac
+
+  case "$id_like" in
+    *" debian "*) echo apt; return ;;
+    *" rhel "*)   echo dnf; return ;;
+    *" fedora "*) echo dnf; return ;;
+    *" arch "*)   echo pacman; return ;;
+  esac
+
+  echo "Unsupported OS: ${PRETTY_NAME:-$ID}" >&2
+  return 1
+}
+
+detect_pm() {
+  local pm
+  pm="$(pm_for_os)" || return 1
+  if ! command -v "$pm" &>/dev/null; then
+    echo "Expected package manager '$pm' for this OS is not installed." >&2
+    return 1
+  fi
+  echo "$pm"
+}
+
+is_rhel_like() {
+  [[ -f /etc/os-release ]] || return 1
+  source /etc/os-release
+  case "${ID:-}" in
+    rhel|centos|rocky|almalinux|ol|scientific) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+ensure_epel() {
+  is_rhel_like || return 0
+  if rpm -q epel-release &>/dev/null; then return 0; fi
+  echo "Installing EPEL (required for json-devel on RHEL)..."
+  sudo dnf install -y epel-release
+}
+
+install_deps() {
+  local pm="$1"; shift
+  local pkgs=("$@")
+
+  case "$pm" in 
+    apt)
+      sudo apt update
+      sudo apt install -y "${pkgs[@]}"
+      ;;
+    dnf)
+      sudo dnf install -y "${pkgs[@]}"
+      ;;
+    pacman)
+      sudo pacman -Sy --needed --noconfirm "${pkgs[@]}"
+      ;;
+    *) echo "Unsupported package manager" >&2; exit 1
+      ;;
+  esac
+}
+
+PM="$(detect_pm)" || exit 1
+case "$PM" in
+    apt)    DEPS=(build-essential cmake libboost-program-options-dev nlohmann-json3-dev arp-scan) ;;
+    dnf)    DEPS=(gcc-c++ make cmake boost-devel json-devel arp-scan) ;;
+    pacman) DEPS=(base-devel cmake boost nlohmann-json arp-scan) ;;
+    *)      echo "Unsupported package manager: $PM" >&2; exit 1 ;;
+esac
+
+[[ "$PM" == "dnf" ]] && ensure_epel
+install_deps "${PM}" "${DEPS[@]}"
+echo -e "\033[32m[OK] Dependencies installed.\033[0m"
+
+PROJECT_DIR="$(cd "$(dirname "$0")" && pwd)"
+BUILD_DIR="${BUILD_DIR:-$PROJECT_DIR/build}"
+
+cmake -S "$PROJECT_DIR" -B "$BUILD_DIR"
+cmake --build "$BUILD_DIR" -j "$(nproc)"
+echo -e "\033[32mBuild Successful.\033[0m"
+
+sudo install -m 755 "$BUILD_DIR/rsc" /usr/local/bin/
+echo -e "\033[32mInstalled rsc to /usr/local/bin.\033[0m"
