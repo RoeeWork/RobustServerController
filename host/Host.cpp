@@ -6,19 +6,21 @@ Host::Host(const std::string& name, const std::string& IPv4Addr, const std::stri
     _MACAddr = MACAddr;
     _status = status;
 }
+
 // getters
 std::string Host::getName() const {
     return _name;
 }
-std::string Host::getIPv4Address() const {
+std::string Host::getIPv4() const {
     return _IPv4Addr;
 }
-std::string Host::getMACAddress() const {
+std::string Host::getMAC() const {
     return _MACAddr;
 }
 bool Host::getStatus() const {
     return _status;
 }
+
 // setters
 void Host::setName(const std::string& name) {
     _name = name;

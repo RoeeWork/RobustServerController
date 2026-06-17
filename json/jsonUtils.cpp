@@ -1,10 +1,9 @@
-#include "jsonUtils.h"
-
+#include "jsonUtils.hpp"
 
 void JsonUtils::serialize(json& jsonResult, const Host& host) {
 	jsonResult["Name"] = host.getName();
-	jsonResult["IPv4"] = host.getIPv4Address();
-	jsonResult["MAC_Address"] = host.getMACAddress();
+	jsonResult["IPv4"] = host.getIPv4();
+	jsonResult["MAC_Address"] = host.getMAC();
 }
 
 void JsonUtils::deserialize(const json& jsonToConvert, Host& infoResult) {

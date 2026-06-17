@@ -1,5 +1,5 @@
 #pragma once
-#include "Host.h"
+#include "../host/Host.hpp"
 
 using nlohmann::json;
 
@@ -18,6 +18,5 @@ private:
     /// @brief Validates the presence and type of a required field in a JSON object
     /// @param jsonToConvert the JSON object to validate
     /// @param fieldName the name of the field to validate
-    void validateJsonField(const json& jsonToConvert, const std::string& fieldName);
-}
-
+    void static validateJsonField(const json& jsonToConvert, const std::string& fieldName);
+};
