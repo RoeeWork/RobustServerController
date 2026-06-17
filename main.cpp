@@ -2,14 +2,14 @@
 #include "Commands.h"
 #include "json_utils.h"
 
-void verbose_print(const std::string& msg, bool verbose) {
-    if (verbose) std::cout << BLUE << "VERBOSE: " << RESET << msg << std::endl;
+void verbose_print(const std::string& msg, bool verbose) { //code rev -> move to utils.h
+    if (verbose) std::cout << BLUE << "VERBOSE: " << RESET << msg << std::endl; //code rev -> Add to if bracets
 }
 
 // WARNING: DO NOT USE TABS!
 // 			using tabs will not align the descriptions correctly.
 // 			use spaces instead.
-void help_command() {
+void help_command() {// code rev -> create const str in utils.h and remove this func. print in main the const str.
 	std::cout << 
 		 R"(USAGE: rsc [OPTIONS] [COMMAND]
 
@@ -35,9 +35,12 @@ DESCRIPTION:
 	for managing LAN servers whose addresses may change due to a NAT.)" << std::endl;
 }
 
-bool verbose = false;
-namespace po = boost::program_options; 
+bool verbose = false; //code rev ->  move to utils.h
+namespace po = boost::program_options; //code rev ->  move to utils.h
 
+//code rev -> main should be short
+//code rev -> split all the main into functions
+//code rev -> move all of the logic from the main to a class
 int main(int argc, char *argv[]) {
 	try {
 		AddServers add;
@@ -90,6 +93,9 @@ int main(int argc, char *argv[]) {
 			throw std::invalid_argument("Invalid argument");
 		}
 	}
+	//code rev -> see which catch needs to move from main
+	//code rev -> maybe add our own exceptions class
+	//code rev -> in the invalid arguement its reapting code ( catch 1 and catch 2) 
 	catch (std::invalid_argument &e) {
 		std::cout << RED <<"[rsc::main()] INVALID ARGUEMENT ERROR: " << RESET << e.what() << std::endl;
 		help_command();
