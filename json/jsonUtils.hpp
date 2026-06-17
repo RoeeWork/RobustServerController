@@ -15,9 +15,9 @@ class JsonUtils {
         void static deserialize(const json& jsonToConvert, Host& infoResult);
 
 private:
-    // @brief Validates the presence and type of a required field in a JSON object
-    // @param jsonToConvert the JSON object to validate
-    // @param fieldName the name of the field to validate
+    /// @brief Validates the presence and type of a required field in a JSON object
+    /// @param jsonToConvert the JSON object to validate
+    /// @param fieldName the name of the field to validate
     void validateJsonField(const json& jsonToConvert, const std::string& fieldName);
 }
 
