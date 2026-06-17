@@ -8,14 +8,12 @@ void JsonUtils::serialize(json& jsonResult, const Host& host) {
 
 void JsonUtils::deserialize(const json& jsonToConvert, Host& infoResult) {
 	validateJsonField(jsonToConvert, "Name");
-	infoResult.setName(jsonToConvert["Name"]);
-
-	validateJsonField(jsonToConvert, "IPv4");
-	infoResult.setIPv4Address(jsonToConvert["IPv4"]);
-
 	validateJsonField(jsonToConvert, "MAC_Address");
-	infoResult.setMACAddress(jsonToConvert["MAC_Address"]);
+	validateJsonField(jsonToConvert, "IPv4");
 
+	infoResult.setName(jsonToConvert["Name"]);
+	infoResult.setIPv4Address(jsonToConvert["IPv4"]);
+	infoResult.setMACAddress(jsonToConvert["MAC_Address"]);
 }
 
 void validateJsonField(const json& jsonToConvert, const std::string& fieldName) {
