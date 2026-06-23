@@ -16,11 +16,19 @@ void JsonUtils::deserialize(const json& jsonToConvert, Host& infoResult) {
 	infoResult.setMACAddress(jsonToConvert["MAC_Address"]);
 }
 
-void validateJsonField(const json& jsonToConvert, const std::string& fieldName) {
+void JsonUtils::validateJsonField(const json& jsonToConvert, const std::string& fieldName) {
 	if (!jsonToConvert.contains(fieldName)) {
 		throw std::invalid_argument("Missing required field: " + fieldName); // need to catch this exception in the caller function of deserialize and handle it properly
 	}
 	if (!(jsonToConvert[fieldName].is_string())) {
 		throw std::invalid_argument("Field '" + fieldName + "' has an incorrect type."); // same as above
+	}
+}
+
+void JsonUtils::validateJsonFileExistence() {
+	//verbose_print("[Commands::changeHostName()] attempting to read serverinfo.json.", verbose);
+	if (!std::filesystem::exists(JSON_FILE_PATH)) {
+		//verbose_print("[Commands::changeHostName()] no serverinfo.json.", verbose);
+		throw std::runtime_error("no serverinfo.json - add hosts before trying to change a host name...");
 	}
 }

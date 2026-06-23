@@ -14,9 +14,12 @@ class JsonUtils {
         /// @param infoResult storage for the resulting host information
         void static deserialize(const json& jsonToConvert, Host& infoResult);
 
+        void static validateJsonFileExistence();
+
 private:
     /// @brief Validates the presence and type of a required field in a JSON object
     /// @param jsonToConvert the JSON object to validate
     /// @param fieldName the name of the field to validate
     void static validateJsonField(const json& jsonToConvert, const std::string& fieldName);
+    const std::filesystem::path JSON_FILE_PATH = root / "serverinfo.json"; // name of the JSON file to store hosts information
 };

@@ -10,7 +10,6 @@ class Commands {
 		Commands();
 		std::vector<host_info> chosenHosts;
 		void RemoveHost(std::string hostName);
-		void changeHostName(std::string currName, std::string newName);
 		bool isFirstRun;
 	protected:
 		void UpdateHosts();

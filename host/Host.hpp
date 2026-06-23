@@ -15,6 +15,9 @@ public:
     void setIPv4Address(const std::string& IPv4Addr);
     void setMACAddress(const std::string& MACAddr);
     void setStatus(const bool status);
+
+    //Methods
+    void changeHostName(std::string currName, std::string newName);
 private:
    	std::string _name; // the host given name
 	std::string _IPv4Addr;
