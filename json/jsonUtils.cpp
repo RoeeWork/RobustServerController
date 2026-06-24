@@ -19,10 +19,10 @@ void JsonUtils::deserialize(const json& jsonToConvert, Host& infoResult) {
 
 void JsonUtils::validateJsonField(const json& jsonToConvert, const std::string& fieldName) {
 	if (!jsonToConvert.contains(fieldName)) {
-		throw std::invalid_argument("Missing required field: " + fieldName); // need to catch this exception in the caller function of deserialize and handle it properly
+		throw std::invalid_argument("[JsonUtils::validateJsonField] Missing required field: " + fieldName); // need to catch this exception in the caller function of deserialize and handle it properly
 	}
 	if (!(jsonToConvert[fieldName].is_string())) {
-		throw std::invalid_argument("Field '" + fieldName + "' has an incorrect type."); // same as above
+		throw std::invalid_argument("[JsonUtils::validateJsonField] Field '" + fieldName + "' has an incorrect type."); // same as above
 	}
 }
 // creates a json file in JSON_FILE_PATH.
@@ -39,7 +39,7 @@ void JsonUtils::createJsonFile() {
 // TODO: Will be smarter to add a string parameter like "filename" and validate according to that...
 void JsonUtils::validateJsonFileExistence() {
 	if (!std::filesystem::exists(JSON_FILE_PATH)) {
-		throw std::runtime_error("no serverinfo.json...");
+		throw std::runtime_error("[JsonUtils::validateJsonFileExistence] no serverinfo.json...");
 	}
 }
 
@@ -56,7 +56,7 @@ void JsonUtils::parseFileToJsonArray(json& j_hosts_data) {
 		infile.close();
 	}
 	catch (json::parse_error &e) {
-			throw std::runtime_error(RED + std::string("[Commands::RemoveHosts()] JSON ERROR: Failed to parse serverinfo.json:") + e.what());
+			throw std::runtime_error(RED + std::string("[JsonUtils::parseFileToJsonArray] JSON ERROR: Failed to parse serverinfo.json:") + e.what());
 	}
 }
 
@@ -78,6 +78,6 @@ void JsonUtils::changeHostName(std::string currName, std::string newName) {
 	}
 
 	catch (const std::exception &e) {
-    	throw std::runtime_error(std::string("[Commands::RemoveHost()] FILE ERROR: ") + e.what());
+    	throw std::runtime_error(std::string("[JsonUtils::changeHostName()] FILE ERROR: ") + e.what());
 	}
 }
