@@ -7,7 +7,7 @@ extern bool verbose;
 class Command {
 	public:
 		// Constructor
-		Command(bool isFirstRun,);
+		Command(bool isFirstRun);
 		void removeHost(std::string hostName);
 		void changeHostName(std::string currName, std::string newName);
 	protected:
