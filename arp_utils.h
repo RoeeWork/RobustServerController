@@ -1,6 +1,11 @@
 /* arp_utils.h */
 #include "utils.h"
 
+// uses popen() to get arp-scan output, and saves each 
+// line to a vector EXCEPT for the first two lines (the header) 
+// and last three lines (the trailer).
+std::vector<std::string> arpScanOutput();
+
 // uses arpScanOutput(), parses all ipv4 and MAC address's , returns all in a vector of pairs <mac, ip>.
 std::vector<std::pair<std::string, std::string>> parsedArpOutput();
 
@@ -12,9 +17,5 @@ bool checkIPv4Status(std::string destIP, std::vector<std::string> arpOut, std::s
 // then returns true. returns false if MAC couldnt be found.
 bool checkStatus(std::string destMAC, std::vector<std::string> arpOut, std::string &destIP);
 
-// uses popen() to get arp-scan output, and saves each 
-// line to a vector EXCEPT for the first two lines (the header) 
-// and last three lines (the trailer).
-std::vector<std::string> arpScanOutput();
 
 void PrintOut(std::vector<std::pair<std::string, std::string>> parsedout);

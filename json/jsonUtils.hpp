@@ -4,6 +4,10 @@
 
 using nlohmann::json;
 
+// TODO: 1. Add comments
+//   	 2. Add Try/Catch blocks
+//   	 3. 
+
 class JsonUtils {
     public:
         /// @brief Serializes host information to JSON format

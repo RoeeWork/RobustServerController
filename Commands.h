@@ -8,7 +8,7 @@ extern bool verbose;
 class Commands {
 	public:
 		Commands();
-		std::vector<host_info> chosenHosts;
+		std::vector<host_info> chosenHosts; // TODO: change data structure to set
 		void RemoveHost(std::string hostName);
 		bool isFirstRun;
 	protected:

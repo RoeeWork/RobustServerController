@@ -67,6 +67,7 @@ void JsonUtils::parseFileToJsonArray(json& j_hosts_data) {
 
 // TODO: will be smarter to make the method change a certain field instead of
 // 		 exculsivly the host_name...
+// 		 MOVE TO HOST_LIST
 void JsonUtils::changeHostName(std::string currName, std::string newName) {
 	json j_hosts_data = json::array();
 

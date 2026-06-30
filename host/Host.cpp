@@ -1,5 +1,11 @@
 #include "Host.hpp"
 
+// TODO: REFACTOR THIS SHIT
+// 		 create a struct called HostInfo in a seprate file.
+// 		 will contain _name, _IPv4Addr, _MacAddr and _status,
+// 		 this will help provide an interface (the host class) for
+// 		 working with hosts and Json in a non-circular dependent way.
+
 Host::Host(const std::string& name, const std::string& IPv4Addr, const std::string& MACAddr, const bool status){
     _name = name;
     _IPv4Addr = IPv4Addr;
