@@ -1,10 +1,11 @@
+#include <memory>
+#include <string>
 #include <vector>
-#include "./Host.hpp"
+#include "Host.hpp"
 
 class HostList {
 	public:
-		// TODO: change name.
-		std::vector<Host> chosenHosts;
+		std::vector<Host> savedHosts;
 
 		// TODO: change name to populateChosenHosts().
 		static void updateHosts();
@@ -17,6 +18,9 @@ class HostList {
 		// 		 but ill change it later.
 		// 		 seperate logic.
 		static void changeHostName();
-
+		// search for a specfic host from saved host by his name
+		// input: nameToSearch - the name of the host to search for
+		// output: either a pointer to the found host or nullptr if not found 
+		std::unique_ptr<Host> searchHostByName(std::string nameToSearch);
 		// TODO: add Commands contructor.
 };
