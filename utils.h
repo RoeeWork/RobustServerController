@@ -22,6 +22,8 @@
 #define UNDER  "\033[4m"
 
 inline std::filesystem::path root = std::filesystem::canonical("/proc/self/exe").parent_path().parent_path();
+bool verbose = false;
+
 struct host_info {
 	std::string name;
 	std::string IPv4;

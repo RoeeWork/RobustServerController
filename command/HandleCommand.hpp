@@ -1,4 +1,4 @@
-#include "../utils.h"
+#include <iostream>
 
 /* HandleCommand: includes endpoints for each command in `rsc`.
  *				  for example: removeHost is the endpoint
@@ -14,6 +14,7 @@ class HandleCommand {
 	public:
 		// Prompts user with the hosts that are known on
 		// the LAN, and adds the chosen ones into the DB.
+		// TODO: seperate logic.
 		static void addMultipleHosts();
 
 		// adds a single host using an IPv4 address.
@@ -29,6 +30,7 @@ class HandleCommand {
 		static void changeHostName(std::string oldName, std::string newName);
 
 		// displays saved hosts with an updated `status` field.
+		// TODO: change name.
 		static void printHosts();
 
 		// resets rsc into default settings.
