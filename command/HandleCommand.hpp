@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include "../host/HostList.hpp" 
 /* HandleCommand: includes endpoints for each command in `rsc`.
  *				  for example: removeHost is the endpoint
  *				  for `$ rsc --remove`.
