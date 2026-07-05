@@ -25,3 +25,4 @@ private:
 	std::string _MACAddr;
 	bool _status; // offline-online
 };
+
