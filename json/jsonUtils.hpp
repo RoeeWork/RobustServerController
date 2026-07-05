@@ -1,4 +1,3 @@
-#pragma once
 #include "../host/Host.hpp"
 
 using nlohmann::json;
@@ -28,10 +27,15 @@ class JsonUtils {
 
 		// parses a json file to a json array.
 		void static parseFileToJsonArray(json& j_hosts_data);
+		static bool JsonFileExists();
 
-		// creates a json file in `JSON_FILE_PATH`.
-		void static createJsonFile();
+		// creates json file in `JSON_FILE_PATH`.
+		static void createJsonFile();
 
+		static std::vector<Host> deserializeJsonArray(json j_host_data);
+		static json getJsonArrayFromFile();
+		static void writeArrayToFile(json arr);
+		static void saveHostsToFile(std::vector<Host> addedHosts);
 	private:
 		/// @brief Validates the presence and type of a required field in a JSON object
 		/// @param jsonToConvert the JSON object to validate

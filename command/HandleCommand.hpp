@@ -1,4 +1,8 @@
 #include <iostream>
+#include <vector>
+#include "../arp/ArpUtils.hpp"
+#include "../IO/HandleOutput.hpp"
+#include "../host/HostList.hpp"
 
 /* HandleCommand: includes endpoints for each command in `rsc`.
  *				  for example: removeHost is the endpoint

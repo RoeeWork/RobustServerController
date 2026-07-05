@@ -1,6 +1,7 @@
 #include "HandleCommand.hpp"
 
 
+//TODO: change this shit wtf
 void HandleCommand::printHosts(){
     std::vector<std::string> scanOutput;
 
@@ -12,15 +13,15 @@ void HandleCommand::printHosts(){
     }
 
     for (auto &h : this->chosenHosts) {
-        setName(h.name)
-        setIPv4Address(h.IPV4)
-        setMACAddress(h.MAC)
-        setStatus(h.status)
+        setName(h.name);
+        setIPv4Address(h.IPV4);
+        setMACAddress(h.MAC);
+        setStatus(h.status);
         
         try {
 			bool status = checkStatus(h.MAC, scanOutput, h.IPv4);
             if (status){
-                setStatus("online")
+                setStatus("online");
             }
             else{
 			    setStatus("offline");
@@ -36,3 +37,11 @@ void HandleCommand::printHosts(){
 	PrintOutput(); 
 }
 
+void HandleCommand::addMultipleHosts() {
+	std::vector<Host> foundHosts = ArpUtils::scanHosts();
+	std::vector<Host> chosenHosts = HandleOutput::StartChooseHostsLoop(foundHosts);
+	JsonUtils::saveHostsToFile(chosenHosts);
+	HostList::populateChosenHosts();
+ 
+	std::cout << "[AddServers::Start()] done!\n";
+}

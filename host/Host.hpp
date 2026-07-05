@@ -5,6 +5,7 @@ class Host
 {
 public:
     Host(const std::string& name,const std::string& IPv4,const std::string& MAC, const bool status);
+    Host();
     // getters
     std::string getName() const;
     std::string getIPv4() const;
