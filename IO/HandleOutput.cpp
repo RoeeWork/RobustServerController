@@ -1,5 +1,7 @@
 #include "./HandleOutput.hpp"
 
+// prints the host vector `hosts` in a numbered list.
+// only prints IPv4 and MAC addresses.
 void HandleOutput::printHostVectorNumberedList(std::vector<Host> hosts) {
 	int i = 1;
 	std::cout << "\n";

@@ -1,10 +1,10 @@
 #include "HostList.hpp"
 
 
+// populates `chosenHosts` with hosts saved on the json DB.
 void HostList::populateChosenHosts() {
-	verbose_print("[Commands::UpdateHosts()] starting Commands::UpdateHosts().", verbose);
 	try {
-		json j_hosts_data = JsonUtils::getJsonArrayFromFile();
+		json j_hosts_data = JsonUtils::getJsonArrayFromFile(JsonUtils::JSON_FILE_PATH);
 		std::vector<Host> hosts = JsonUtils::deserializeJsonArray(j_hosts_data);
 
 		chosenHosts.clear();
@@ -13,7 +13,6 @@ void HostList::populateChosenHosts() {
 		}
 	}
 	catch (const std::exception &e) {
-		verbose_print("[Commands::UpdateHosts()] found exception", verbose);
 		throw std::runtime_error(std::string("[Commands::UpdateHosts()] FILE ERROR: ") + e.what());
 	}
 }

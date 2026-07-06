@@ -23,6 +23,7 @@ void JsonUtils::deserialize(const json& jsonToConvert, Host& infoResult) {
 	infoResult.setMACAddress(jsonToConvert["MAC_Address"]);
 }
 
+// deserializes an entire json array into a Host vector.
 std::vector<Host> JsonUtils::deserializeJsonArray(json j_host_data) {
 	std::vector<Host> hosts;
 	for (auto &j : j_host_data) {
@@ -30,6 +31,7 @@ std::vector<Host> JsonUtils::deserializeJsonArray(json j_host_data) {
 	}
 	return hosts;
 }
+
 /// @brief Validates the presence and type of a required field in a JSON object
 /// @param jsonToConvert the JSON object to validate
 /// @param fieldName the name of the field to validate
@@ -43,33 +45,33 @@ void JsonUtils::validateJsonField(const json& jsonToConvert, const std::string& 
 }
 
 
-// creates a json file in JSON_FILE_PATH.
-// TODO: Will be smarter to add a string parameter like "filename" and create according to that...
-void JsonUtils::createJsonFile() {
-	std::ofstream file(JSON_FILE_PATH);
-	file << "[]";
-	file.close();
+// creates json file in `file`.
+// TODO: add method to ensure json file path integrity.
+void JsonUtils::createJsonFile(std::filesystem::path file) {
+	std::ofstream j_file(file);
+	j_file << "[]";
+	j_file.close();
 }
 
-// Validates if JSON_FILE_PATH exists.
-// TODO: Will be smarter to add a string parameter like "filename" and validate according to that...
-void JsonUtils::validateJsonFileExistence() {
-	if (!std::filesystem::exists(JSON_FILE_PATH)) {
+// validates if `file` exists in the filesystem.
+void JsonUtils::validateJsonFileExistence(std::filesystem::path file) {
+	if (!std::filesystem::exists(file)) {
 		throw std::runtime_error("[JsonUtils::validateJsonFileExistence] no serverinfo.json...");
 	}
 }
-// Validates if JSON_FILE_PATH exists.
-// TODO: Will be smarter to add a string parameter like "filename" and validate according to that...
-bool JsonUtils::JsonFileExists() {
-	if (!std::filesystem::exists(JSON_FILE_PATH)) {
+
+// returns true if `file` exists in the filesystem,
+// false otherwise.
+bool JsonUtils::jsonFileExists(std::filesystem::path file){
+	if (!std::filesystem::exists(file)) {
 		return false;
 	}
 	return true;
 }
 
-// Parses a json file to a json array j_hosts_data.
-void JsonUtils::parseFileToJsonArray(json& j_hosts_data) {
-	std::ifstream infile(JSON_FILE_PATH);
+// parses a json file to a json array.
+void JsonUtils::parseFileToJsonArray(json& j_hosts_data, std::filesystem::path file) {
+	std::ifstream infile(file);
 	if (infile.good() && infile.peek() != std::ifstream::traits_type::eof()) {
 			infile >> j_hosts_data;
 			if ( !j_hosts_data.is_array()) {
@@ -78,6 +80,51 @@ void JsonUtils::parseFileToJsonArray(json& j_hosts_data) {
 	}
 	infile.close();
 }
+
+// returns a json array which contains the contents of `file`
+json JsonUtils::getJsonArrayFromFile(std::filesystem::path file) {
+			if (!jsonFileExists(file)) {
+				createJsonFile(file);
+			}
+
+			json j_hosts_data = json::array();
+
+			try {
+				parseFileToJsonArray(j_hosts_data, file);
+			}
+			catch (json::parse_error &e) {
+					std::cerr << "[AddServers::SaveAddrs()] ERROR: parse error. Resetting.";
+					j_hosts_data = json::array();
+			}
+			return j_hosts_data;
+}
+
+// writes a json array `arr` into file `file`.
+void JsonUtils::writeArrayToFile(json arr, std::filesystem::path file) {
+	std::ofstream outfile(file);
+	outfile << arr.dump(4);
+	outfile.close();
+}
+
+// appends and saves `addedHosts` into `file`
+void JsonUtils::saveHostsToFile(std::vector<Host> addedHosts, std::filesystem::path file) {
+	try {
+		if (addedHosts.size() != 0) {
+			json j_hosts_data = getJsonArrayFromFile(file);
+
+			for (auto &h : addedHosts) {
+				serialize(j_hosts_data.emplace_back(), h);
+			}
+
+			writeArrayToFile(j_hosts_data, file);
+		}
+	}
+
+	catch (std::exception &e) {
+		throw std::runtime_error(RED + std::string("[AddServers::SaveAddrs()] ERROR: ") + e.what());
+	}
+}
+
 
 // TODO: will be smarter to make the method change a certain field instead of
 // 		 exculsivly the host_name...
@@ -98,45 +145,3 @@ void JsonUtils::changeHostName(std::string currName, std::string newName) {
 
 	std::ofstream(JSON_FILE_PATH,  std::ios::trunc) << j_hosts_data.dump(4);
 }
-
-void JsonUtils::writeArrayToFile(json arr) {
-	std::ofstream outfile(JSON_FILE_PATH);
-	outfile << arr.dump(4);
-	outfile.close();
-}
-
-json JsonUtils::getJsonArrayFromFile() {
-			if (!JsonFileExists()) {
-				createJsonFile();
-			}
-
-			json j_hosts_data = json::array();
-
-			try {
-				parseFileToJsonArray(j_hosts_data);
-			}
-			catch (json::parse_error &e) {
-					std::cerr << "[AddServers::SaveAddrs()] ERROR: parse error. Resetting.";
-					j_hosts_data = json::array();
-			}
-			return j_hosts_data;
-}
-void JsonUtils::saveHostsToFile(std::vector<Host> addedHosts) {
-	try {
-		if (addedHosts.size() != 0) {
-			json j_hosts_data = getJsonArrayFromFile();
-
-			for (auto &h : addedHosts) {
-				serialize(j_hosts_data.emplace_back(), h);
-			}
-
-			writeArrayToFile(j_hosts_data);
-		}
-	}
-
-	catch (std::exception &e) {
-		throw std::runtime_error(RED + std::string("[AddServers::SaveAddrs()] ERROR: ") + e.what());
-	}
-}
-
-

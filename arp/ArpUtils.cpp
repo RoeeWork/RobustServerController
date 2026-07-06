@@ -6,7 +6,6 @@ std::vector<Host> ArpUtils::scanHosts() {
 	std::vector<std::pair<std::string, std::string>> hostsStrings = parsedArpOutput();
 	
 
-	// convert hosts to host_info
 	for (const auto &p : hostsStrings) {
 		std::string mac_addr = p.first;
 		std::string ipv4 = p.second;

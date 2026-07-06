@@ -9,6 +9,7 @@ class HandleOutput {
 		static void printHostVectorTable(); 
 
 		static std::vector<Host> StartChooseHostsLoop(std::vector<Host> foundHosts);
+
 		// pretty prints hosts in chosenHosts as a list.
 		// only prints ipv4 and mac.
 		static void printHostVectorNumberedList(std::vector<Host> hosts); 

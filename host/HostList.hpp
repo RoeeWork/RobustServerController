@@ -6,8 +6,8 @@ class HostList {
 	public:
 		// TODO: change name.
 		static std::vector<Host> chosenHosts;
-
-		// TODO: change name to populateChosenHosts().
+		
+		// populates `chosenHosts` with hosts saved on the json DB.
 		static void populateChosenHosts();
 
 		// TODO: i acutally think this belongs in `HandleCommand`,

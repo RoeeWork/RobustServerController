@@ -39,9 +39,9 @@ void HandleCommand::printHosts(){
 
 void HandleCommand::addMultipleHosts() {
 	std::vector<Host> foundHosts = ArpUtils::scanHosts();
-	std::vector<Host> chosenHosts = HandleOutput::StartChooseHostsLoop(foundHosts);
-	JsonUtils::saveHostsToFile(chosenHosts);
+	std::vector<Host> newChosenHosts = HandleOutput::StartChooseHostsLoop(foundHosts);
+	JsonUtils::saveHostsToFile(newChosenHosts, JsonUtils::JSON_FILE_PATH);
 	HostList::populateChosenHosts();
  
-	std::cout << "[AddServers::Start()] done!\n";
+	std::cout << "[HandleCommand::addMultipleHosts()] done!\n";
 }
