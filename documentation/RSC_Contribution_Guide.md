@@ -4,8 +4,9 @@ The codebase is divided (conceptually) into three levels:
 1. level 1 - main file
 2. level 2 - **Command endpoints**, each represent a CLI command the project supports.  implemented in the codebase as `HandleCommand`.
 3. level 3 - **Utility components** to be used by each other and the command endpoints.
-   
-![[Pasted image 20260706160244.png]]
+
+<img width="788" height="422" alt="image" src="https://github.com/user-attachments/assets/1144269e-df08-4c03-a947-2139ca541f49" />
+
 #### Hierarchy rules
  - Each method in level 2 should only use methods/classes from level 3 and not from level 2 or level 1.
  - endpoint logic should be short and simple as a result of level 3's design, about 5-10 lines per method.
