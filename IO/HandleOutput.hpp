@@ -4,6 +4,10 @@
 
 class HandleOutput {
 	public:
+		// The contents of RSC's help command.
+		// WARNING: DO NOT USE TABS, ONLY SPACES!
+		static const std::string HELP_TEXT;
+
 		// pretty prints hosts in chosenHosts as a table.
 		// TODO: change name.
 		static void printHostVectorTable(); 
@@ -17,8 +21,4 @@ class HandleOutput {
 		// prints msg if verbose is equal to true. 
 		static void verbosePrint(const std::string& msg, bool verbose);
 		
-		// prints the help command to the screen.
-		// TODO: Change to a field and create a command
-		// 		 called `printHelp()` in `HandleCommand`.
-		static void helpCommand();
 };

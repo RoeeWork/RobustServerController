@@ -37,6 +37,9 @@ class HandleCommand {
 		// TODO: change name.
 		static void printHosts();
 
+		// prints the help command to the screen.
+		static void printHelp();
+
 		// resets rsc into default settings.
 		static void factoryReset();
 };
