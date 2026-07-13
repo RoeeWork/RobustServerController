@@ -37,6 +37,11 @@ void HandleCommand::printHosts(){
 	PrintOutput(); 
 }
 
+// prints the help command to the screen.
+void HandleCommand::printHelp() {
+	std::cout << HandleOutput::HELP_TEXT << std::endl;
+}
+
 void HandleCommand::addMultipleHosts() {
 	std::vector<Host> foundHosts = ArpUtils::scanHosts();
 	std::vector<Host> newChosenHosts = HandleOutput::StartChooseHostsLoop(foundHosts);

@@ -41,3 +41,25 @@ void Host::setStatus(const bool status) {
     _status = status;
 }
 
+std::ostream& operator<<(std::ostream& os, const Host& host) {
+	// TODO: change these to a struct called TableContext? could
+	// 		 be useful...
+	int nameColumnMargin = 20;
+	int IPv4ColumnMargin = 15;
+	int MACColumnMargin = 20;
+	int statusColumnMargin = 15;
+
+	std::string hostName = host.getName();
+	std::string hostIPv4 = host.getIPv4();
+	std::string hostMAC = host.getMAC();
+	bool hostStatus = host.getStatus();
+
+	os << std::left;
+
+	os << std::setw(nameColumnMargin) << hostName << RESET;
+	os << std::setw(IPv4ColumnMargin) << hostIPv4 << RESET;
+	os << std::setw(MACColumnMargin) << hostMAC << RESET;
+	os << std::setw(statusColumnMargin) << (hostStatus ? "online" : "offline") << RESET;
+
+	return os;
+}
