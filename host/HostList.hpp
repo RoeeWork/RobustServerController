@@ -6,7 +6,9 @@ class HostList {
 	public:
 		// TODO: change name.
 		static std::vector<Host> chosenHosts;
-		
+
+		static std::vector<Host> getChosenHosts();
+
 		// populates `chosenHosts` with hosts saved on the json DB.
 		static void populateChosenHosts();
 
@@ -21,3 +23,4 @@ class HostList {
 
 		// TODO: add Commands contructor.
 };
+std::ostream& operator<<(std::ostream& os, const HostList& hosts);

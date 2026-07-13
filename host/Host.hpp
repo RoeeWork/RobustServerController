@@ -27,3 +27,4 @@ private:
 	bool _status; // offline-online
 };
 
+std::ostream& operator<<(std::ostream& os, const Host& host);
